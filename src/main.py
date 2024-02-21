@@ -20,7 +20,7 @@ def udp_receive(source_ip, source_port):
         data, addr = sock.recvfrom(1024) #1024 buffer size
         print("received message %s" % data)
 
-## udp_send and udp receive are from https://wiki.python.org/moin/UdpCommunication
+## udp_send and udp_receive are from https://wiki.python.org/moin/UdpCommunication
 
 def aes_enc(plaintext, iv, key):
     iv = bytes.fromhex(iv)
