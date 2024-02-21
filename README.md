@@ -1,2 +1,2 @@
 # time_based_stegochannels_artifact
-Artifact Related to Thomas Hearmons 2024 Newcastle University Dissertation
+Artifact Related to Thomas Hearmon's 2024 Newcastle University Dissertation
