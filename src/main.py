@@ -29,7 +29,7 @@ def aes_enc(plaintext, iv, key):
     cipher_text = b64encode(cipher.encrypt(pad(plaintext.encode('utf-8'), AES.block_size))).decode("utf-8")
     return cipher_text
 
-def aes_dec(cipher_text, key, iv)
+def aes_dec(cipher_text, key, iv):
     cipher = AES.new(key=key, mode=AES.MODE_CBC, iv=iv)
     decoded_text = unpad(cipher.decrypt(b64decode(cipher_text)), AES.block_size).decode("utf-8")
     return decoded_text
