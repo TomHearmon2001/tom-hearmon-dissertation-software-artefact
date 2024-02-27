@@ -1,4 +1,5 @@
 # Imports
+import os
 import getpass
 import socket
 import time
@@ -16,13 +17,12 @@ def sha256_hash(text_to_hash):
     return sha256(text_to_hash.encode('utf-8')).hexdigest()
 
 
-def init_admin(passwordDict):
+def init_admin():
     hashed_pw = sha256_hash("ADMIN")
     passwordDict['ADMIN'] = hashed_pw
-    print(passwordDict)
 
 
-def login(passwordDict):
+def login():
     getpass.GetPassWarning()
     username = input("Enter your username: ")
     print("Hello ", username)
@@ -33,6 +33,7 @@ def login(passwordDict):
                 hashed_pw = sha256_hash(getpass.getpass("Incorrect Password, Please try again : "))
             break
     print("Login Successful")
+    user_menu()
 
 
 def udp_send(destination_ip, destination_port, message):
@@ -50,6 +51,7 @@ def udp_receive(source_ip, source_port):
 
 
 # udp_send and udp_receive are from https://wiki.python.org/moin/UdpCommunication
+
 
 def aes_enc(plaintext, iv, key):
     iv = bytes.fromhex(iv)
@@ -91,8 +93,54 @@ def dummy_time_stego():
     print("dummy packet 1 sent")
     time.sleep(int(stego_time_key))
     print("dummy packet 2 sent")
+    print("Program Complete returning to main menu in 5 seconds")
+    time.sleep(5)
+    user_menu()
 
 
-init_admin(passwordDict)
-login(passwordDict)
-dummy_time_stego()
+def login_menu():
+    while True:
+        os.system('cls')
+        print("Welcome to the stegotime chat client menu.")
+        print("Press 1 to Log In")
+        print("Press 2 if you are a new user")
+        print("Press 3 to exit")
+        x = int(input())
+        if x == 1:
+            os.system('cls')
+            login()
+        elif x == 2:
+            os.system('cls')
+            print("Nothing Here Yet!")
+        elif x == 3:
+            os.system('cls')
+            exit("User Closed the Program")
+
+
+def user_menu():
+    while True:
+        os.system('cls')
+        print("Press 1 for dummy time stego")
+        print("Press 2 to Log Out")
+        print("Press 3 to close the program")
+
+        x = int(input())
+        if x == 1:
+            os.system('cls')
+            dummy_time_stego()
+        if x == 2:
+            os.system('cls')
+            login_menu()
+        if x == 3:
+            os.system('cls')
+            exit("User Closed the Program")
+
+
+# main program here
+def main():
+    init_admin()
+    login_menu()
+
+
+if __name__ == "__main__":
+    main()
