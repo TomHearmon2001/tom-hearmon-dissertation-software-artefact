@@ -1,5 +1,6 @@
 # Imports
 import socket
+import time
 from base64 import b64encode, b64decode
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
@@ -36,3 +37,17 @@ def aes_dec(cipher_text, key, iv):
     return decoded_text
 
 # aes_enc and aes_dec are from Thomas Gross Week 3 Work Sheet
+
+
+def dummy_time_stego():
+    message = "Dummy message"
+    enc_message = aes_enc(message, "123456", "banana")
+    print(enc_message)
+    stego_time = input("What delay in messages do you want in seconds?")
+    # Dummy for now in full will send packets via udp
+    print(enc_message)
+    time.sleep(stego_time)
+    print(enc_message)
+
+
+dummy_time_stego()
