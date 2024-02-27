@@ -1,12 +1,33 @@
 # Imports
+import getpass
 import socket
 import time
 from base64 import b64encode, b64decode
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
 
+# Global Variables
+passwordDict = {}
+
 
 # functions
+def init_admin(passwordDict):
+    passwordDict['ADMIN'] = 'ADMIN'
+
+
+def login(passwordDict):
+    getpass.GetPassWarning()
+    username = input("Enter your username: ")
+    print("Hello ", username)
+    password = getpass.getpass("Enter your Password : ")
+    for i in passwordDict.keys():
+        if username == i:
+            while password != passwordDict.get(i):
+                password = getpass.getpass("Incorrect Password, Please try again : ")
+            break
+    print("Login Successful")
+
+
 def udp_send(destination_ip, destination_port, message):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.sendto(message, (destination_ip, destination_port))
@@ -36,6 +57,7 @@ def aes_dec(cipher_text, key, iv):
     decoded_text = unpad(cipher.decrypt(b64decode(cipher_text)), AES.block_size).decode("utf-8")
     return decoded_text
 
+
 # aes_enc and aes_dec are from Thomas Gross Week 3 Work Sheet
 
 
@@ -48,6 +70,8 @@ def integer_validation(message):
             continue
         else:
             return user_input
+
+
 # How to make sure the user enters a number (integer) - www.101computing.net
 
 
@@ -62,4 +86,6 @@ def dummy_time_stego():
     print("dummy packet 2 sent")
 
 
+init_admin(passwordDict)
+login(passwordDict)
 dummy_time_stego()
