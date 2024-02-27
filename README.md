@@ -18,6 +18,6 @@ $ cd PycharmProjects\time_based_stegochannels_artifact\src
 ```
 Then run the following command:
 ```
-python3 main.py
+$ python3 main.py
 ```
 The program will now run in that terminal window.
