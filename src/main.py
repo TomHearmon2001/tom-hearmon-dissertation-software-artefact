@@ -5,25 +5,32 @@ import time
 from base64 import b64encode, b64decode
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
+from hashlib import sha256
 
 # Global Variables
 passwordDict = {}
 
 
 # functions
+def sha256_hash(text_to_hash):
+    return sha256(text_to_hash.encode('utf-8')).hexdigest()
+
+
 def init_admin(passwordDict):
-    passwordDict['ADMIN'] = 'ADMIN'
+    hashed_pw = sha256_hash("ADMIN")
+    passwordDict['ADMIN'] = hashed_pw
+    print(passwordDict)
 
 
 def login(passwordDict):
     getpass.GetPassWarning()
     username = input("Enter your username: ")
     print("Hello ", username)
-    password = getpass.getpass("Enter your Password : ")
+    hashed_pw = sha256_hash(getpass.getpass("Enter your Password : "))
     for i in passwordDict.keys():
         if username == i:
-            while password != passwordDict.get(i):
-                password = getpass.getpass("Incorrect Password, Please try again : ")
+            while hashed_pw != passwordDict.get(i):
+                hashed_pw = sha256_hash(getpass.getpass("Incorrect Password, Please try again : "))
             break
     print("Login Successful")
 
