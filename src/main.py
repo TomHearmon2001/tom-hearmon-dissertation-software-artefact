@@ -16,13 +16,12 @@ def sha256_hash(text_to_hash):
     return sha256(text_to_hash.encode('utf-8')).hexdigest()
 
 
-def init_admin(passwordDict):
+def init_admin():
     hashed_pw = sha256_hash("ADMIN")
     passwordDict['ADMIN'] = hashed_pw
-    print(passwordDict)
 
 
-def login(passwordDict):
+def login():
     getpass.GetPassWarning()
     username = input("Enter your username: ")
     print("Hello ", username)
@@ -33,6 +32,7 @@ def login(passwordDict):
                 hashed_pw = sha256_hash(getpass.getpass("Incorrect Password, Please try again : "))
             break
     print("Login Successful")
+    user_menu()
 
 
 def udp_send(destination_ip, destination_port, message):
@@ -92,9 +92,11 @@ def dummy_time_stego():
     print("dummy packet 1 sent")
     time.sleep(int(stego_time_key))
     print("dummy packet 2 sent")
+    print("Program Complete returning to main menu")
+    user_menu()
 
 
-def login_menu(passwordDict):
+def login_menu():
     while True:
         print("Welcome to the stegotime chat client menu.")
         print("Press 1 to Log In")
@@ -102,17 +104,32 @@ def login_menu(passwordDict):
         print("Press 3 to exit")
         x = int(input())
         if x == 1:
-            login(passwordDict)
+            login()
         elif x == 2:
             print("Nothing Here Yet!")
         elif x == 3:
             exit("User Closed the Program")
 
 
+def user_menu():
+    while True:
+        print("Press 1 for dummy time stego")
+        print("Press 2 to Log Out")
+        print("Press 3 to close the program")
+
+        x = int(input())
+        if x == 1:
+            dummy_time_stego()
+        if x == 2:
+            login_menu()
+        if x == 3:
+            exit("User Closed the Program")
+
+
 # main program here
 def main():
-    init_admin(passwordDict)
-    login_menu(passwordDict)
+    init_admin()
+    login_menu()
 
 
 if __name__ == "__main__":
