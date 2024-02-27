@@ -39,15 +39,27 @@ def aes_dec(cipher_text, key, iv):
 # aes_enc and aes_dec are from Thomas Gross Week 3 Work Sheet
 
 
+def integer_validation(message):
+    while True:
+        try:
+            user_input = int(input(message))
+        except ValueError:
+            print("stego key must be an integer")
+            continue
+        else:
+            return user_input
+# How to make sure the user enters a number (integer) - www.101computing.net
+
+
 def dummy_time_stego():
     message = "Dummy message"
-    enc_message = aes_enc(message, "123456", "banana")
+    enc_message = aes_enc(message, "ffeeddccbbaa99887766554433221100", "00112233445566778899aabbccddeeff")
     print(enc_message)
-    stego_time = input("What delay in messages do you want in seconds?")
+    stego_time_key = integer_validation("What delay in messages do you want in seconds?")
     # Dummy for now in full will send packets via udp
-    print(enc_message)
-    time.sleep(stego_time)
-    print(enc_message)
+    print("dummy packet 1 sent")
+    time.sleep(int(stego_time_key))
+    print("dummy packet 2 sent")
 
 
 dummy_time_stego()
