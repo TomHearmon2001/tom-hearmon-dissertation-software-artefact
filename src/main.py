@@ -51,6 +51,7 @@ def udp_receive(source_ip, source_port):
 
 # udp_send and udp_receive are from https://wiki.python.org/moin/UdpCommunication
 
+
 def aes_enc(plaintext, iv, key):
     iv = bytes.fromhex(iv)
     key = bytes.fromhex(key)
@@ -93,6 +94,26 @@ def dummy_time_stego():
     print("dummy packet 2 sent")
 
 
-init_admin(passwordDict)
-login(passwordDict)
-dummy_time_stego()
+def login_menu(passwordDict):
+    while True:
+        print("Welcome to the stegotime chat client menu.")
+        print("Press 1 to Log In")
+        print("Press 2 if you are a new user")
+        print("Press 3 to exit")
+        x = int(input())
+        if x == 1:
+            login(passwordDict)
+        elif x == 2:
+            print("Nothing Here Yet!")
+        elif x == 3:
+            exit("User Closed the Program")
+
+
+# main program here
+def main():
+    init_admin(passwordDict)
+    login_menu(passwordDict)
+
+
+if __name__ == "__main__":
+    main()
