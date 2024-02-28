@@ -92,9 +92,26 @@ def dummy_time_stego():    # function implementing time based steganography with
     user_menu()
 
 
+def create_user():  # Function for new user creation
+    getpass.GetPassWarning()
+    print("This account will only be kept while the program is running.")   # Temporary
+    username = input("Enter a username: ")
+    pw = getpass.getpass("Enter your password: ")
+    pw2 = getpass.getpass("Enter your password again: ")
+    if pw == pw2:
+        hashed_pw = sha256_hash(pw)
+        passwordDict[username] = hashed_pw
+        os.system('cls')
+        print("Account Successfully Created!")
+        login_menu()
+    else:
+        os.system('cls')
+        print("Passwords did not match please start again")
+        create_user()
+
+
 def login_menu():   # Function for the login menu
     while True:
-        os.system('cls')
         print("Welcome to the stego-time chat client login.")
         print("Press 1 to login")
         print("Press 2 if you are a new user")
@@ -105,8 +122,7 @@ def login_menu():   # Function for the login menu
             login()
         elif x == 2:
             os.system('cls')
-            print("Nothing Here Yet!")
-            login_menu()
+            create_user()
         elif x == 3:
             os.system('cls')
             exit("User Closed the Program")
