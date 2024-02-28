@@ -75,8 +75,6 @@ def integer_validation(message):    # Function to validate if the user has enter
             continue
         else:
             return user_input
-
-
 # How to make sure the user enters a number (integer) - www.101computing.net
 
 
@@ -97,8 +95,8 @@ def dummy_time_stego():    # function implementing time based steganography with
 def login_menu():   # Function for the login menu
     while True:
         os.system('cls')
-        print("Welcome to the stegotime chat client menu.")
-        print("Press 1 to Log In")
+        print("Welcome to the stego-time chat client login.")
+        print("Press 1 to login")
         print("Press 2 if you are a new user")
         print("Press 3 to exit")
         x = int(input())
@@ -108,6 +106,7 @@ def login_menu():   # Function for the login menu
         elif x == 2:
             os.system('cls')
             print("Nothing Here Yet!")
+            login_menu()
         elif x == 3:
             os.system('cls')
             exit("User Closed the Program")
