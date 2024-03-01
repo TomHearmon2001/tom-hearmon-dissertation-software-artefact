@@ -151,7 +151,6 @@ def user_menu():    # Function for the user menu
 def find_user_ip():
     hostname = socket.gethostname()
     ip_addr = socket.gethostbyname(hostname)
-    print(f"This device is running on {ip_addr}")
     return ip_addr
 
 
