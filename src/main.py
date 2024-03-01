@@ -147,6 +147,13 @@ def user_menu():    # Function for the user menu
             exit("User Closed the Program")
 
 
+def find_user_ip():
+    hostname = socket.gethostname()
+    ip_addr = socket.gethostbyname(hostname)
+    print(f"This device is running on {ip_addr}")
+    return ip_addr
+
+
 # main program here
 def main():
     init_admin()    # Initialise Admin Credentials for Login (temporary)
