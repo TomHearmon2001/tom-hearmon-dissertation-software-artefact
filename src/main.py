@@ -155,7 +155,7 @@ def find_user_ip():
     return ip_addr
 
 
-def find_netmask():    # Found @
+def find_netmask():    # Found @ https://stackoverflow.com/questions/936444/retrieving-network-mask-in-python
     ip = find_user_ip()
     proc = subprocess.Popen('ipconfig', stdout=subprocess.PIPE)
     while True:
