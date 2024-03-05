@@ -2,6 +2,7 @@
 import os
 import getpass
 import socket
+import subprocess
 import time
 from base64 import b64encode, b64decode
 from Crypto.Cipher import AES
@@ -147,8 +148,27 @@ def user_menu():    # Function for the user menu
             exit("User Closed the Program")
 
 
+def find_user_ip():
+    hostname = socket.gethostname()
+    ip_addr = socket.gethostbyname(hostname)
+    return ip_addr
+
+
+def find_netmask():    # Found @ https://stackoverflow.com/questions/936444/retrieving-network-mask-in-python
+    ip = find_user_ip()
+    proc = subprocess.Popen('ipconfig', stdout=subprocess.PIPE)
+    while True:
+        line = proc.stdout.readline()
+        if ip.encode() in line:
+            break
+    mask = proc.stdout.readline().rstrip().split(b':')[-1].replace(b' ', b'').decode()
+    print(f"Netmask is {mask}")
+    return mask
+
+
 # main program here
 def main():
+    find_netmask()
     init_admin()    # Initialise Admin Credentials for Login (temporary)
     login_menu()    # Run Login Function
 
