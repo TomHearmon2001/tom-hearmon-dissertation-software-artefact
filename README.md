@@ -16,6 +16,31 @@ The command to get to this is:
 ```
 $ cd PycharmProjects\time_based_stegochannels_artifact\src
 ```
+If it is your first time running the project you need to run the command:
+```
+$ pip install pycryptodome
+```
+Then run the following command:
+```
+$ python3 main.py
+```
+The program will now run in that terminal window.
+
+### Linux
+Open the terminal and navigate to the src folder
+
+For me the folder is here:
+```
+~/PycharmProjects/time_based_stegochannels_artifact/src
+```
+The command to get to this is:
+```
+$ cd PycharmProjects\time_based_stegochannels_artifact\src
+```
+If it is your first time running the project you need to run the command:
+```
+$ pip install pycryptodome
+```
 Then run the following command:
 ```
 $ python3 main.py
