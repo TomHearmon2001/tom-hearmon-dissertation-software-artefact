@@ -93,6 +93,13 @@ def dummy_time_stego():    # function implementing time based steganography with
     user_menu()
 
 
+def net_info():     # Function to get network info
+    ip = find_user_ip()
+    print("IP address is: ", ip)
+    net_mask = find_netmask()
+    print("Network mask is: ", net_mask)
+
+
 def create_user():  # Function for new user creation
     getpass.GetPassWarning()
     print("This account will only be kept while the program is running.")   # Temporary
@@ -133,8 +140,9 @@ def user_menu():    # Function for the user menu
     while True:
         os.system('cls')
         print("Press 1 for dummy time stego")
-        print("Press 2 to Log Out")
-        print("Press 3 to close the program")
+        print("Press 2 for Network information")
+        print("Press 3 to Log Out")
+        print("Press 4 to close the program")
 
         x = int(input())
         if x == 1:
@@ -142,8 +150,11 @@ def user_menu():    # Function for the user menu
             dummy_time_stego()
         if x == 2:
             os.system('cls')
-            login_menu()
+            net_info()
         if x == 3:
+            os.system('cls')
+            login_menu()
+        if x == 4:
             os.system('cls')
             exit("User Closed the Program")
 
