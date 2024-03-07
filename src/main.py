@@ -176,9 +176,10 @@ def user_menu():    # Function for the user menu
         clear_line()
         print("Press 1 for dummy time stego")
         print("Press 2 for Network information")
-        print("Press 3 to send a message via UDP")
-        print("Press 4 to Log Out")
-        print("Press 5 to close the program")
+        print("Press 3 to send a message via TCP")
+        print("Press 4 to receive a message via TCP")
+        print("Press 5 to Log Out")
+        print("Press 6 to close the program")
 
         x = int(input())
         if x == 1:
@@ -189,11 +190,14 @@ def user_menu():    # Function for the user menu
             net_info()
         if x == 3:
             clear_line()
-
+            tcp_send()
         if x == 4:
             clear_line()
-            login_menu()
+            tcp_receive()
         if x == 5:
+            clear_line()
+            login_menu()
+        if x == 6:
             clear_line()
             exit("User Closed the Program")
 
