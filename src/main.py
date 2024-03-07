@@ -14,6 +14,11 @@ passwordDict = {}   # Dictionary to Store User Account Information in
 
 
 # functions
+def clear_line():   # clears the line of the terminal on any OS
+    os.system('cls' if os.name == 'nt' else 'clear')
+    # https://discuss.codecademy.com/t/how-to-clear-the-screen-in-command-line-mode-on-python/403250
+
+
 def sha256_hash(text_to_hash):  # Function to hash text
     return sha256(text_to_hash.encode('utf-8')).hexdigest()
 
@@ -109,11 +114,11 @@ def create_user():  # Function for new user creation
     if pw == pw2:
         hashed_pw = sha256_hash(pw)
         passwordDict[username] = hashed_pw
-        os.system('cls')
+        clear_line()
         print("Account Successfully Created!")
         login_menu()
     else:
-        os.system('cls')
+        clear_line()
         print("Passwords did not match please start again")
         create_user()
 
@@ -126,19 +131,19 @@ def login_menu():   # Function for the login menu
         print("Press 3 to exit")
         x = int(input())
         if x == 1:
-            os.system('cls')
+            clear_line()
             login()
         elif x == 2:
-            os.system('cls')
+            clear_line()
             create_user()
         elif x == 3:
-            os.system('cls')
+            clear_line()
             exit("User Closed the Program")
 
 
 def user_menu():    # Function for the user menu
     while True:
-        os.system('cls')
+        clear_line()
         print("Press 1 for dummy time stego")
         print("Press 2 for Network information")
         print("Press 3 to Log Out")
@@ -146,16 +151,16 @@ def user_menu():    # Function for the user menu
 
         x = int(input())
         if x == 1:
-            os.system('cls')
+            clear_line()
             dummy_time_stego()
         if x == 2:
-            os.system('cls')
+            clear_line()
             net_info()
         if x == 3:
-            os.system('cls')
+            clear_line()
             login_menu()
         if x == 4:
-            os.system('cls')
+            clear_line()
             exit("User Closed the Program")
 
 
