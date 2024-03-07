@@ -58,7 +58,7 @@ def udp_receive(source_ip, source_port):    # Function to receive and read udp p
 
 
 def tcp_send():
-    host = input("Destination IP Address")  # The server's hostname or IP address
+    host = input("Destination IP Address ")  # The server's hostname or IP address
     port = 65432  # The port used by the server
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -70,7 +70,7 @@ def tcp_send():
 
 
 def tcp_receive():
-    host = find_user_ip()
+    host = input("IP to receive from: ")
     port = 65432  # Port to listen on (non-privileged ports are > 1023)
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
