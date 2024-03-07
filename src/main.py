@@ -71,7 +71,7 @@ def tcp_send():
 
 def tcp_receive():
     host = input("IP to receive from: ")
-    port = 65432  # Port to listen on (non-privileged ports are > 1023)
+    port = 65433  # Port to listen on (non-privileged ports are > 1023)
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((host, port))
