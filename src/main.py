@@ -59,18 +59,15 @@ def udp_receive(source_ip, source_port):    # Function to receive and read udp p
 
 def tcp_send():
     host = input("Destination IP Address ")  # The server's hostname or IP address
-    port = 4000  # The port used by the server
+    port = 4001  # The port used by the server
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((host, port))
         s.sendall(b"Hello, world")
-        data = s.recv(1024)
-
-    print(f"Received {data!r}")
 
 
 def tcp_receive():
-    host = input("IP to receive from: ")
+    host = input("Your IP: ")
     port = 4001  # Port to listen on (non-privileged ports are > 1023)
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -81,6 +78,7 @@ def tcp_receive():
             print(f"Connected by {addr}")
             while True:
                 data = conn.recv(1024)
+                print(data)
                 if not data:
                     break
                 conn.sendall(data)
