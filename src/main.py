@@ -57,6 +57,36 @@ def udp_receive(source_ip, source_port):    # Function to receive and read udp p
 # udp_send and udp_receive are from https://wiki.python.org/moin/UdpCommunication
 
 
+def tcp_send():
+    host = input("Destination IP Address")  # The server's hostname or IP address
+    port = 65432  # The port used by the server
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((host, port))
+        s.sendall(b"Hello, world")
+        data = s.recv(1024)
+
+    print(f"Received {data!r}")
+
+
+def tcp_receive():
+    host = find_user_ip()
+    port = 65432  # Port to listen on (non-privileged ports are > 1023)
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind((host, port))
+        s.listen()
+        conn, addr = s.accept()
+        with conn:
+            print(f"Connected by {addr}")
+            while True:
+                data = conn.recv(1024)
+                if not data:
+                    break
+                conn.sendall(data)
+# https://realpython.com/python-sockets/#background
+
+
 def aes_enc(plaintext, iv, key):    # Function implementing aes-128 encryption in Chain Block Cipher Mode
     iv = bytes.fromhex(iv)
     key = bytes.fromhex(key)
@@ -146,8 +176,9 @@ def user_menu():    # Function for the user menu
         clear_line()
         print("Press 1 for dummy time stego")
         print("Press 2 for Network information")
-        print("Press 3 to Log Out")
-        print("Press 4 to close the program")
+        print("Press 3 to send a message via UDP")
+        print("Press 4 to Log Out")
+        print("Press 5 to close the program")
 
         x = int(input())
         if x == 1:
@@ -158,8 +189,11 @@ def user_menu():    # Function for the user menu
             net_info()
         if x == 3:
             clear_line()
-            login_menu()
+
         if x == 4:
+            clear_line()
+            login_menu()
+        if x == 5:
             clear_line()
             exit("User Closed the Program")
 
@@ -184,7 +218,6 @@ def find_netmask():    # Found @ https://stackoverflow.com/questions/936444/retr
 
 # main program here
 def main():
-    find_netmask()
     init_admin()    # Initialise Admin Credentials for Login (temporary)
     login_menu()    # Run Login Function
 
