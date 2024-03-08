@@ -31,15 +31,21 @@ def init_admin():   # Function to initialise the admin details (temporary)
 def login():    # Login function, allows user to be authenticated to use the program
     getpass.GetPassWarning()
     username = input("Enter your username: ")
-    print("Hello ", username)
-    hashed_pw = sha256_hash(getpass.getpass("Enter your Password : "))
     for i in passwordDict.keys():
         if username == i:
-            while hashed_pw != passwordDict.get(i):
-                hashed_pw = sha256_hash(getpass.getpass("Incorrect Password, Please try again : "))
-            break
-    print("Login Successful")
-    user_menu()
+            print("Hello ", username)
+            hashed_pw = sha256_hash(getpass.getpass("Enter your Password : "))
+            for j in passwordDict.keys():
+                if username == j:
+                    while hashed_pw != passwordDict.get(j):
+                        hashed_pw = sha256_hash(getpass.getpass("Incorrect Password, Please try again : "))
+                    break
+            print("Login Successful")
+            user_menu()
+        else:
+            clear_line()
+            print("Username not found!")
+            login_menu()
 
 
 def tcp_send(message):
