@@ -42,21 +42,6 @@ def login():    # Login function, allows user to be authenticated to use the pro
     user_menu()
 
 
-def udp_send(destination_ip, destination_port, message):    # Function to create and send udp packets
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.sendto(message, (destination_ip, destination_port))
-
-
-def udp_receive(source_ip, source_port):    # Function to receive and read udp packets
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.bind((source_ip, source_port))
-
-    while True:
-        data, addr = sock.recvfrom(1024)  # 1024 buffer size
-        print("received message %s" % data)
-# udp_send and udp_receive are from https://wiki.python.org/moin/UdpCommunication
-
-
 def tcp_send():
     host = input("Destination IP Address ")  # The server's hostname or IP address
     port = 4001  # The port used by the server
