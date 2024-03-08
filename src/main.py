@@ -42,13 +42,13 @@ def login():    # Login function, allows user to be authenticated to use the pro
     user_menu()
 
 
-def tcp_send():
+def tcp_send(message):
     host = input("Destination IP Address ")  # The server's hostname or IP address
     port = 4001  # The port used by the server
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((host, port))
-        s.sendall(b"Hello, world")
+        s.sendall(message)
 
 
 def tcp_receive():
@@ -66,7 +66,6 @@ def tcp_receive():
                 print(data)
                 if not data:
                     break
-                conn.sendall(data)
 # https://realpython.com/python-sockets/#background
 
 
@@ -103,9 +102,9 @@ def dummy_time_stego():    # function implementing time based steganography with
     print(enc_message)
     stego_time_key = integer_validation("What delay in messages do you want in seconds?")
     # Dummy for now in full will send packets via udp
-    print("dummy packet 1 sent")
+    tcp_send(message)
     time.sleep(int(stego_time_key))
-    print("dummy packet 2 sent")
+    tcp_send(message)
     print("Program Complete returning to main menu in 5 seconds")
     time.sleep(5)
     user_menu()
@@ -173,7 +172,8 @@ def user_menu():    # Function for the user menu
             net_info()
         if x == 3:
             clear_line()
-            tcp_send()
+            message = input("What is your message? ")
+            tcp_send(message)
         if x == 4:
             clear_line()
             tcp_receive()
