@@ -72,7 +72,7 @@ def tcp_receive():
                 print(data)
                 if not data:
                     break
-# https://realpython.com/python-sockets/#background
+    # https://realpython.com/python-sockets/#background
 
 
 def aes_enc(plaintext, iv, key):    # Function implementing aes-128 encryption in Chain Block Cipher Mode
@@ -192,9 +192,14 @@ def user_menu():    # Function for the user menu
 
 
 def find_user_ip():
-    hostname = socket.gethostname()
-    ip_addr = socket.gethostbyname(hostname)
-    return ip_addr
+    if os.name == 'nt':
+        print("This program cannot get your windows IP automatically.")
+        print("Please select it from the information below:")
+        os.system("ipconfig")
+        return input("IP you wish to use")
+    else:
+        ip_addr = subprocess.check_output("hostname -I", shell=True)
+        return ip_addr.decode()
 
 
 def find_netmask():    # Found @ https://stackoverflow.com/questions/936444/retrieving-network-mask-in-python
