@@ -119,6 +119,8 @@ def dummy_time_stego():    # function implementing time based steganography with
 def net_info():     # Function to get network info
     ip = find_user_ip()
     print("IP address is: ", ip)
+    print("Program will return to main menu in 10 seconds")
+    time.sleep(10)
     # net_mask = find_netmask()
     # print("Network mask is: ", net_mask)
 
