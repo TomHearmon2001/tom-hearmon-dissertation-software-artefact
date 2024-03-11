@@ -87,7 +87,7 @@ def aes_dec(cipher_text, key, iv):  # Function implementing aes-128 decryption i
     cipher = AES.new(key=key, mode=AES.MODE_CBC, iv=iv)
     decoded_text = unpad(cipher.decrypt(b64decode(cipher_text)), AES.block_size).decode("utf-8")
     return decoded_text
-# aes_enc and aes_dec are from Thomas Gross Week 3 Work Sheet
+    # aes_enc and aes_dec are from Thomas Gross Week 3 Work Sheet
 
 
 def integer_validation(message):    # Function to validate if the user has entered an integer
@@ -99,7 +99,7 @@ def integer_validation(message):    # Function to validate if the user has enter
             continue
         else:
             return user_input
-# How to make sure the user enters a number (integer) - www.101computing.net
+    # How to make sure the user enters a number (integer) - www.101computing.net
 
 
 def dummy_time_stego():    # function implementing time based steganography with dummy packets
