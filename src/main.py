@@ -196,7 +196,7 @@ def find_user_ip():
         print("This program cannot get your windows IP automatically.")
         print("Please select it from the information below:")
         os.system("ipconfig")
-        return input("IP you wish to use")
+        return input("IP you wish to use: ")
     else:
         ip_addr = subprocess.check_output("hostname -I", shell=True)
         return ip_addr.decode()
