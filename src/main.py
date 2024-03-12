@@ -48,8 +48,7 @@ def login():    # Login function, allows user to be authenticated to use the pro
             login_menu()
 
 
-def tcp_send(message):
-    host = input("Destination IP Address ")  # The server's hostname or IP address
+def tcp_send(message, host):
     port = 4001  # The port used by the server
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -57,8 +56,8 @@ def tcp_send(message):
         s.sendall(message)
 
 
-def tcp_receive():
-    host = input("Your IP: ")
+def tcp_receive(host):
+    print(f"Server set up at {host}")
     port = 4001  # Port to listen on (non-privileged ports are > 1023)
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -102,18 +101,30 @@ def integer_validation(message):    # Function to validate if the user has enter
     # How to make sure the user enters a number (integer) - www.101computing.net
 
 
-def dummy_time_stego():    # function implementing time based steganography with dummy packets
+def dummy_time_stego(host):    # function implementing time based steganography with dummy packets
     message = "Dummy message"
     enc_message = aes_enc(message, "ffeeddccbbaa99887766554433221100", "00112233445566778899aabbccddeeff")
     print(enc_message)
     stego_time_key = integer_validation("What delay in messages do you want in seconds?")
     # Dummy for now in full will send packets via udp
-    tcp_send(message)
+    tcp_send(message, host)
     time.sleep(int(stego_time_key))
-    tcp_send(message)
+    tcp_send(message, host)
     print("Program Complete returning to main menu in 5 seconds")
     time.sleep(5)
     user_menu()
+
+
+def receive_stego_message():
+    host = find_user_ip()
+    print("Waiting to receive stego message")
+    tcp_receive(host)
+    time1 = time.perf_counter()
+    tcp_receive(host)
+    time2 = time.perf_counter()
+    print(f"The stego message received was {time1 - time2:0.4f}")
+    print("Program will return to main menu in 10 seconds")
+    time.sleep(10)
 
 
 def net_info():     # Function to get network info
@@ -165,31 +176,38 @@ def login_menu():   # Function for the login menu
 def user_menu():    # Function for the user menu
     while True:
         clear_line()
-        print("Press 1 for dummy time stego")
-        print("Press 2 for Network information")
-        print("Press 3 to send a message via TCP")
-        print("Press 4 to receive a message via TCP")
-        print("Press 5 to Log Out")
-        print("Press 6 to close the program")
+        print("Press 1 for Network information")
+        print("Press 2 to send a message via TCP")
+        print("Press 3 to receive a message via TCP")
+        print("Press 4 to send stego message with dummy packets")
+        print("Press 5 to receive stego message")
+        print("Press 6 to Log Out")
+        print("Press 7 to close the program")
 
         x = int(input())
         if x == 1:
             clear_line()
-            dummy_time_stego()
+            net_info()
         if x == 2:
             clear_line()
-            net_info()
+            host = input("Destination IP Address ")
+            message = input("What is your message? ")
+            tcp_send(message, host)
         if x == 3:
             clear_line()
-            message = input("What is your message? ")
-            tcp_send(message)
+            host = find_user_ip()
+            tcp_receive(host)
         if x == 4:
             clear_line()
-            tcp_receive()
+            host = input("Destination IP Address ")
+            dummy_time_stego(host)
         if x == 5:
             clear_line()
-            login_menu()
+            receive_stego_message()
         if x == 6:
+            clear_line()
+            login_menu()
+        if x == 7:
             clear_line()
             exit("User Closed the Program")
 
