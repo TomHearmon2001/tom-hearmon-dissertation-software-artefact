@@ -220,7 +220,7 @@ def find_user_ip():
         return input("IP you wish to use: ")
     else:
         ip_addr = subprocess.check_output("hostname -I", shell=True)
-        return ip_addr.decode()
+        return ip_addr.decode().strip()
 
 
 def find_netmask():    # Found @ https://stackoverflow.com/questions/936444/retrieving-network-mask-in-python
