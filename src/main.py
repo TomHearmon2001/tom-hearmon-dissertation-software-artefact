@@ -50,10 +50,10 @@ def login():    # Login function, allows user to be authenticated to use the pro
 
 def tcp_send(message, host):
     port = 4001  # The port used by the server
-
+    message_in_bytes = message.encode("utf-8")
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((host, port))
-        s.sendall(message)
+        s.sendall(message_in_bytes)
 
 
 def tcp_receive(host):
