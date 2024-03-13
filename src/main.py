@@ -20,7 +20,7 @@ def clear_line():   # clears the line of the terminal on any OS
 
 
 def sha256_hash(text_to_hash):  # Function to hash text
-    return sha256(text_to_hash.encode('utf-8')).hexdigest()
+    return sha256(encode_to_bytes(text_to_hash)).hexdigest()
 
 
 def init_admin():   # Function to initialise the admin details (temporary)
@@ -50,10 +50,9 @@ def login():    # Login function, allows user to be authenticated to use the pro
 
 def tcp_send(message, host):
     port = 4001  # The port used by the server
-    message_in_bytes = message.encode("utf-8")
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((host, port))
-        s.sendall(message_in_bytes)
+        s.sendall(encode_to_bytes(message))
 
 
 def tcp_receive(host):
@@ -68,6 +67,7 @@ def tcp_receive(host):
             print(f"Connected by {addr}")
             while True:
                 data = conn.recv(1024)
+                data = decode_from_bytes(data)
                 print(data)
                 print("Message received Returning to menu in 10 seconds")
                 time.sleep(10)
@@ -76,11 +76,19 @@ def tcp_receive(host):
     # https://realpython.com/python-sockets/#background
 
 
+def encode_to_bytes(data):
+    return data.encode("utf-8")
+
+
+def decode_from_bytes(data):
+    return data.decode().strip()
+
+
 def aes_enc(plaintext, iv, key):    # Function implementing aes-128 encryption in Chain Block Cipher Mode
     iv = bytes.fromhex(iv)
     key = bytes.fromhex(key)
     cipher = AES.new(key=key, mode=AES.MODE_CBC, iv=iv)
-    cipher_text = b64encode(cipher.encrypt(pad(plaintext.encode('utf-8'), AES.block_size))).decode("utf-8")
+    cipher_text = b64encode(cipher.encrypt(pad(encode_to_bytes(plaintext), AES.block_size))).decode("utf-8")
     return cipher_text
 
 
@@ -222,7 +230,7 @@ def find_user_ip():
         return input("IP you wish to use: ")
     else:
         ip_addr = subprocess.check_output("hostname -I", shell=True)
-        return ip_addr.decode().strip()
+        return decode_from_bytes(ip_addr)
 
 
 def find_netmask():    # Found @ https://stackoverflow.com/questions/936444/retrieving-network-mask-in-python
