@@ -67,8 +67,7 @@ def tcp_receive(host):
             print(f"Connected by {addr}")
             while True:
                 data = conn.recv(1024)
-                data = decode_from_bytes(data)
-                print(data)
+                print(decode_from_bytes(data))
                 print("Message received Returning to menu in 10 seconds")
                 time.sleep(10)
                 if not data:
