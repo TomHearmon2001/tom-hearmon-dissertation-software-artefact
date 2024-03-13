@@ -69,6 +69,8 @@ def tcp_receive(host):
             while True:
                 data = conn.recv(1024)
                 print(data)
+                print("Message received Returning to menu in 10 seconds")
+                time.sleep(10)
                 if not data:
                     break
     # https://realpython.com/python-sockets/#background
