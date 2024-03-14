@@ -71,10 +71,12 @@ def tcp_receive(host):
             print(f"Connected by {addr}")
             while True:
                 data = conn.recv(1024)
+                data = decode_from_bytes(data)
+                data = aes_dec(data, "ffeeddccbbaa99887766554433221100", "00112233445566778899aabbccddeeff")
                 if not stego:
-                    data_print(data)
+                    print(data)
                 else:
-                    print(decode_from_bytes(data))
+                    print(data)
                     break
                 if not data:
                     break
@@ -214,7 +216,8 @@ def user_menu():    # Function for the user menu
             clear_line()
             host = input("Destination IP Address ")
             message = input("What is your message? ")
-            tcp_send(message, host)
+            enc_message = aes_enc(message, "ffeeddccbbaa99887766554433221100", "00112233445566778899aabbccddeeff")
+            tcp_send(enc_message, host)
         if x == 3:
             clear_line()
             host = find_user_ip()
