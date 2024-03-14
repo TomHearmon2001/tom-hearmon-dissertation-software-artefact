@@ -189,12 +189,17 @@ def login_menu():   # Function for the login menu
         if x == 1:
             clear_line()
             login()
-        elif x == 2:
+        if x == 2:
             clear_line()
             create_user()
-        elif x == 3:
+        if x == 3:
             clear_line()
             exit("User Closed the Program")
+        else:
+            clear_line()
+            print("Invalid Input Returning to menu in 5 seconds")
+            time.sleep(5)
+            login_menu()
 
 
 def user_menu():    # Function for the user menu
@@ -235,6 +240,11 @@ def user_menu():    # Function for the user menu
         if x == 7:
             clear_line()
             exit("User Closed the Program")
+        else:
+            clear_line()
+            print("Invalid Input Returning to menu in 5 seconds")
+            time.sleep(5)
+            user_menu()
 
 
 def find_user_ip():
