@@ -156,8 +156,6 @@ def net_info():     # Function to get network info
     print("IP address is: ", ip)
     print("Program will return to main menu in 10 seconds")
     time.sleep(10)
-    # net_mask = find_netmask()
-    # print("Network mask is: ", net_mask)
 
 
 def create_user():  # Function for new user creation
@@ -244,18 +242,6 @@ def find_user_ip():
     else:
         ip_addr = subprocess.check_output("hostname -I", shell=True)
         return decode_from_bytes(ip_addr)
-
-
-def find_netmask():    # Found @ https://stackoverflow.com/questions/936444/retrieving-network-mask-in-python
-    ip = find_user_ip()
-    proc = subprocess.Popen('ipconfig', stdout=subprocess.PIPE)
-    while True:
-        line = proc.stdout.readline()
-        if ip.encode() in line:
-            break
-    mask = proc.stdout.readline().rstrip().split(b':')[-1].replace(b' ', b'').decode()
-    print(f"Netmask is {mask}")
-    return mask
 
 
 # main program here
