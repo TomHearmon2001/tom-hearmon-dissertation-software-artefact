@@ -144,7 +144,7 @@ def receive_stego_message():
     time1 = time.perf_counter()
     tcp_receive(host)
     time2 = time.perf_counter()
-    print(f"The stego message received was {time1 - time2:0.4f}")
+    print(f"The stego message received was {time2 - time1:0.4f}")
     print("Program will return to main menu in 10 seconds")
     stego = False
     time.sleep(10)
