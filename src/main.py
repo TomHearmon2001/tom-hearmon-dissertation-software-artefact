@@ -52,8 +52,10 @@ def login():    # Login function, allows user to be authenticated to use the pro
 def tcp_send(message, host):
     port = 4001  # The port used by the server
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.connect((host, port))
         s.sendall(encode_to_bytes(message))
+    s.close()
 
 
 def tcp_receive(host):
@@ -61,6 +63,7 @@ def tcp_receive(host):
     port = 4001  # Port to listen on (non-privileged ports are > 1023)
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind((host, port))
         s.listen()
         conn, addr = s.accept()
