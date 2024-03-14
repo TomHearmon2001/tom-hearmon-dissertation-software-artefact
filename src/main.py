@@ -30,6 +30,7 @@ def init_admin():   # Function to initialise the admin details (temporary)
 
 
 def login():    # Login function, allows user to be authenticated to use the program
+    login_attempts = 0
     getpass.GetPassWarning()
     username = input("Enter your username: ")
     for i in passwordDict.keys():
@@ -39,7 +40,11 @@ def login():    # Login function, allows user to be authenticated to use the pro
             for j in passwordDict.keys():
                 if username == j:
                     while hashed_pw != passwordDict.get(j):
-                        hashed_pw = sha256_hash(getpass.getpass("Incorrect Password, Please try again : "))
+                        if login_attempts == 4:
+                            exit("Too many attempts closing program")
+                        else:
+                            login_attempts += 1
+                            hashed_pw = sha256_hash(getpass.getpass("Incorrect Password, Please try again : "))
                     break
             print("Login Successful")
             user_menu()
