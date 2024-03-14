@@ -125,11 +125,12 @@ def integer_validation(message):    # Function to validate if the user has enter
 def dummy_time_stego(host):    # function implementing time based steganography with dummy packets
     message = "Dummy message"
     enc_message = aes_enc(message, "ffeeddccbbaa99887766554433221100", "00112233445566778899aabbccddeeff")
-    print(enc_message)
     stego_time_key = integer_validation("What delay in messages do you want in seconds?")
-    tcp_send(message, host)
+    tcp_send(enc_message, host)
+    print("Message 1 sent successfully")
     time.sleep(int(stego_time_key))
-    tcp_send(message, host)
+    tcp_send(enc_message, host)
+    print("Message 2 sent successfully")
     print("Program Complete returning to main menu in 5 seconds")
     time.sleep(5)
     user_menu()
