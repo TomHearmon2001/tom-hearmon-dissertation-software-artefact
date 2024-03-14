@@ -11,6 +11,7 @@ from hashlib import sha256
 
 # Global Variables
 passwordDict = {}   # Dictionary to Store User Account Information in
+stego = False
 
 
 # functions
@@ -20,7 +21,7 @@ def clear_line():   # clears the line of the terminal on any OS
 
 
 def sha256_hash(text_to_hash):  # Function to hash text
-    return sha256(text_to_hash.encode('utf-8')).hexdigest()
+    return sha256(encode_to_bytes(text_to_hash)).hexdigest()
 
 
 def init_admin():   # Function to initialise the admin details (temporary)
@@ -48,20 +49,21 @@ def login():    # Login function, allows user to be authenticated to use the pro
             login_menu()
 
 
-def tcp_send(message):
-    host = input("Destination IP Address ")  # The server's hostname or IP address
+def tcp_send(message, host):
     port = 4001  # The port used by the server
-
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.connect((host, port))
-        s.sendall(message)
+        s.sendall(encode_to_bytes(message))
+    s.close()
 
 
-def tcp_receive():
-    host = input("Your IP: ")
+def tcp_receive(host):
+    print(f"Server set up at {host}")
     port = 4001  # Port to listen on (non-privileged ports are > 1023)
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind((host, port))
         s.listen()
         conn, addr = s.accept()
@@ -69,17 +71,35 @@ def tcp_receive():
             print(f"Connected by {addr}")
             while True:
                 data = conn.recv(1024)
-                print(data)
+                if not stego:
+                    data_print(data)
+                else:
+                    print(decode_from_bytes(data))
+                    break
                 if not data:
                     break
     # https://realpython.com/python-sockets/#background
+
+
+def data_print(data):
+    print(decode_from_bytes(data))
+    print("Message received Returning to menu in 10 seconds")
+    time.sleep(10)
+
+
+def encode_to_bytes(data):
+    return data.encode("utf-8")
+
+
+def decode_from_bytes(data):
+    return data.decode().strip()
 
 
 def aes_enc(plaintext, iv, key):    # Function implementing aes-128 encryption in Chain Block Cipher Mode
     iv = bytes.fromhex(iv)
     key = bytes.fromhex(key)
     cipher = AES.new(key=key, mode=AES.MODE_CBC, iv=iv)
-    cipher_text = b64encode(cipher.encrypt(pad(plaintext.encode('utf-8'), AES.block_size))).decode("utf-8")
+    cipher_text = b64encode(cipher.encrypt(pad(encode_to_bytes(plaintext), AES.block_size))).decode("utf-8")
     return cipher_text
 
 
@@ -102,18 +122,32 @@ def integer_validation(message):    # Function to validate if the user has enter
     # How to make sure the user enters a number (integer) - www.101computing.net
 
 
-def dummy_time_stego():    # function implementing time based steganography with dummy packets
+def dummy_time_stego(host):    # function implementing time based steganography with dummy packets
     message = "Dummy message"
     enc_message = aes_enc(message, "ffeeddccbbaa99887766554433221100", "00112233445566778899aabbccddeeff")
     print(enc_message)
     stego_time_key = integer_validation("What delay in messages do you want in seconds?")
-    # Dummy for now in full will send packets via udp
-    tcp_send(message)
+    tcp_send(message, host)
     time.sleep(int(stego_time_key))
-    tcp_send(message)
+    tcp_send(message, host)
     print("Program Complete returning to main menu in 5 seconds")
     time.sleep(5)
     user_menu()
+
+
+def receive_stego_message():
+    global stego
+    stego = True
+    host = find_user_ip()
+    print("Waiting to receive stego message")
+    tcp_receive(host)
+    time1 = time.perf_counter()
+    tcp_receive(host)
+    time2 = time.perf_counter()
+    print(f"The stego message received was {time1 - time2:0.4f}")
+    print("Program will return to main menu in 10 seconds")
+    stego = False
+    time.sleep(10)
 
 
 def net_info():     # Function to get network info
@@ -165,31 +199,38 @@ def login_menu():   # Function for the login menu
 def user_menu():    # Function for the user menu
     while True:
         clear_line()
-        print("Press 1 for dummy time stego")
-        print("Press 2 for Network information")
-        print("Press 3 to send a message via TCP")
-        print("Press 4 to receive a message via TCP")
-        print("Press 5 to Log Out")
-        print("Press 6 to close the program")
+        print("Press 1 for Network information")
+        print("Press 2 to send a message via TCP")
+        print("Press 3 to receive a message via TCP")
+        print("Press 4 to send stego message with dummy packets")
+        print("Press 5 to receive stego message")
+        print("Press 6 to Log Out")
+        print("Press 7 to close the program")
 
         x = int(input())
         if x == 1:
             clear_line()
-            dummy_time_stego()
+            net_info()
         if x == 2:
             clear_line()
-            net_info()
+            host = input("Destination IP Address ")
+            message = input("What is your message? ")
+            tcp_send(message, host)
         if x == 3:
             clear_line()
-            message = input("What is your message? ")
-            tcp_send(message)
+            host = find_user_ip()
+            tcp_receive(host)
         if x == 4:
             clear_line()
-            tcp_receive()
+            host = input("Destination IP Address ")
+            dummy_time_stego(host)
         if x == 5:
             clear_line()
-            login_menu()
+            receive_stego_message()
         if x == 6:
+            clear_line()
+            login_menu()
+        if x == 7:
             clear_line()
             exit("User Closed the Program")
 
@@ -202,7 +243,7 @@ def find_user_ip():
         return input("IP you wish to use: ")
     else:
         ip_addr = subprocess.check_output("hostname -I", shell=True)
-        return ip_addr.decode()
+        return decode_from_bytes(ip_addr)
 
 
 def find_netmask():    # Found @ https://stackoverflow.com/questions/936444/retrieving-network-mask-in-python
