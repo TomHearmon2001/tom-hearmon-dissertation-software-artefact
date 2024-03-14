@@ -11,6 +11,7 @@ from hashlib import sha256
 
 # Global Variables
 passwordDict = {}   # Dictionary to Store User Account Information in
+stego = False
 
 
 # functions
@@ -67,12 +68,20 @@ def tcp_receive(host):
             print(f"Connected by {addr}")
             while True:
                 data = conn.recv(1024)
-                print(decode_from_bytes(data))
-                print("Message received Returning to menu in 10 seconds")
-                time.sleep(10)
+                if not stego:
+                    data_print(data)
+                else:
+                    print(decode_from_bytes(data))
+                    break
                 if not data:
                     break
     # https://realpython.com/python-sockets/#background
+
+
+def data_print(data):
+    print(decode_from_bytes(data))
+    print("Message received Returning to menu in 10 seconds")
+    time.sleep(10)
 
 
 def encode_to_bytes(data):
@@ -115,7 +124,6 @@ def dummy_time_stego(host):    # function implementing time based steganography 
     enc_message = aes_enc(message, "ffeeddccbbaa99887766554433221100", "00112233445566778899aabbccddeeff")
     print(enc_message)
     stego_time_key = integer_validation("What delay in messages do you want in seconds?")
-    # Dummy for now in full will send packets via udp
     tcp_send(message, host)
     time.sleep(int(stego_time_key))
     tcp_send(message, host)
@@ -125,6 +133,8 @@ def dummy_time_stego(host):    # function implementing time based steganography 
 
 
 def receive_stego_message():
+    global stego
+    stego = True
     host = find_user_ip()
     print("Waiting to receive stego message")
     tcp_receive(host)
@@ -133,6 +143,7 @@ def receive_stego_message():
     time2 = time.perf_counter()
     print(f"The stego message received was {time1 - time2:0.4f}")
     print("Program will return to main menu in 10 seconds")
+    stego = False
     time.sleep(10)
 
 
