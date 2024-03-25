@@ -4,6 +4,8 @@ import getpass
 import socket
 import subprocess
 import time
+import string
+import random
 from sys import executable
 from subprocess import Popen, CREATE_NEW_CONSOLE
 from base64 import b64encode, b64decode
@@ -263,6 +265,14 @@ def find_user_ip():
     else:
         ip_addr = subprocess.check_output("hostname -I", shell=True)
         return decode_from_bytes(ip_addr)
+
+
+def get_random_string(length):
+    # choose from all lowercase letter
+    letters = string.ascii_lowercase
+    result_str = ''.join(random.choice(letters) for i in range(length))
+    return result_str
+    # https://pynative.com/python-generate-random-string/#h-how-to-create-a-random-string-in-python
 
 
 # main program here
