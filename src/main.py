@@ -275,10 +275,15 @@ def get_random_string(length):
     # https://pynative.com/python-generate-random-string/#h-how-to-create-a-random-string-in-python
 
 
+def new_console(script):
+    Popen([executable, script], creationflags=CREATE_NEW_CONSOLE)
+    # https://stackoverflow.com/questions/6469655/how-can-i-spawn-new-shells-to-run-python-scripts-from-a-base-python-script
+
+
 # main program here
 def main():
-    Popen([executable, 'auto-message-receive.py'], creationflags=CREATE_NEW_CONSOLE)
-    Popen([executable, 'auto-message-gen.py'], creationflags=CREATE_NEW_CONSOLE)
+    new_console('auto-message-receive.py')
+    new_console('auto-message-send.py')
     init_admin()    # Initialise Admin Credentials for Login (temporary)
     login_menu()    # Run Login Function
 
