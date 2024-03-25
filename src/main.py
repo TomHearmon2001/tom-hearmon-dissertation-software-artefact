@@ -267,6 +267,7 @@ def find_user_ip():
 
 # main program here
 def main():
+    Popen([executable, 'auto-message-receive.py'], creationflags=CREATE_NEW_CONSOLE)
     Popen([executable, 'auto-message-gen.py'], creationflags=CREATE_NEW_CONSOLE)
     init_admin()    # Initialise Admin Credentials for Login (temporary)
     login_menu()    # Run Login Function
