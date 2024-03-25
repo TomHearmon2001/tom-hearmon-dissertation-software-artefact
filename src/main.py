@@ -4,6 +4,8 @@ import getpass
 import socket
 import subprocess
 import time
+from sys import executable
+from subprocess import Popen, CREATE_NEW_CONSOLE
 from base64 import b64encode, b64decode
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
@@ -265,6 +267,7 @@ def find_user_ip():
 
 # main program here
 def main():
+    Popen([executable, 'auto-message-gen.py'], creationflags=CREATE_NEW_CONSOLE)
     init_admin()    # Initialise Admin Credentials for Login (temporary)
     login_menu()    # Run Login Function
 
