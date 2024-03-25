@@ -4,6 +4,10 @@ import getpass
 import socket
 import subprocess
 import time
+import string
+import random
+from sys import executable
+from subprocess import Popen, CREATE_NEW_CONSOLE
 from base64 import b64encode, b64decode
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
@@ -263,8 +267,23 @@ def find_user_ip():
         return decode_from_bytes(ip_addr)
 
 
+def get_random_string(length):
+    # choose from all lowercase letter
+    letters = string.ascii_lowercase
+    result_str = ''.join(random.choice(letters) for i in range(length))
+    return result_str
+    # https://pynative.com/python-generate-random-string/#h-how-to-create-a-random-string-in-python
+
+
+def new_console(script):
+    Popen([executable, script], creationflags=CREATE_NEW_CONSOLE)
+    # https://stackoverflow.com/questions/6469655/how-can-i-spawn-new-shells-to-run-python-scripts-from-a-base-python-script
+
+
 # main program here
 def main():
+    new_console('auto-message-receive.py')
+    new_console('auto-message-send.py')
     init_admin()    # Initialise Admin Credentials for Login (temporary)
     login_menu()    # Run Login Function
 
