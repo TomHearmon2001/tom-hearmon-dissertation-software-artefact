@@ -6,6 +6,7 @@ import subprocess
 import time
 import string
 import random
+import pydivert
 from sys import executable
 from subprocess import Popen, CREATE_NEW_CONSOLE
 from base64 import b64encode, b64decode
@@ -278,6 +279,20 @@ def get_random_string(length):
 def new_console(script):
     Popen([executable, script], creationflags=CREATE_NEW_CONSOLE)
     # https://stackoverflow.com/questions/6469655/how-can-i-spawn-new-shells-to-run-python-scripts-from-a-base-python-script
+
+
+def packet_capture():
+    # Capture only TCP packets to port 80, i.e. HTTP requests.
+    w = pydivert.WinDivert("tcp.DstPort == 4001 and tcp.PayloadLength > 0")
+
+    w.open()  # packets will be captured from now on
+
+    packet = w.recv()  # read a single packet
+    print(packet)
+    w.send(packet)  # re-inject the packet into the network stack
+
+    w.close()  # stop capturing packets
+    # https://stackoverflow.com/questions/71888853/capturing-packets-in-python-3
 
 
 # main program here
