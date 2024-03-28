@@ -1,26 +1,22 @@
 # Imports
-import os
 import getpass
-import socket
-import subprocess
-import time
-import string
-import random
-import pydivert
+from scapy.all import *
+from scapy.layers.l2 import Ether, ARP
 from sys import executable
-from subprocess import Popen, CREATE_NEW_CONSOLE
+if os.name == 'nt':
+    from subprocess import Popen, CREATE_NEW_CONSOLE
 from base64 import b64encode, b64decode
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
 from hashlib import sha256
 
 # Global Variables
-passwordDict = {}   # Dictionary to Store User Account Information in
+passwordDict = {}  # Dictionary to Store User Account Information in
 stego = False
 
 
 # functions
-def clear_line():   # clears the line of the terminal on any OS
+def clear_line():  # clears the line of the terminal on any OS
     os.system('cls' if os.name == 'nt' else 'clear')
     # https://discuss.codecademy.com/t/how-to-clear-the-screen-in-command-line-mode-on-python/403250
 
@@ -29,12 +25,12 @@ def sha256_hash(text_to_hash):  # Function to hash text
     return sha256(encode_to_bytes(text_to_hash)).hexdigest()
 
 
-def init_admin():   # Function to initialise the admin details (temporary)
+def init_admin():  # Function to initialise the admin details (temporary)
     hashed_pw = sha256_hash("ADMIN")
     passwordDict['ADMIN'] = hashed_pw
 
 
-def login():    # Login function, allows user to be authenticated to use the program
+def login():  # Login function, allows user to be authenticated to use the program
     login_attempts = 0
     getpass.GetPassWarning()
     username = input("Enter your username: ")
@@ -107,7 +103,7 @@ def decode_from_bytes(data):
     return data.decode().strip()
 
 
-def aes_enc(plaintext, iv, key):    # Function implementing aes-128 encryption in Chain Block Cipher Mode
+def aes_enc(plaintext, iv, key):  # Function implementing aes-128 encryption in Chain Block Cipher Mode
     iv = bytes.fromhex(iv)
     key = bytes.fromhex(key)
     cipher = AES.new(key=key, mode=AES.MODE_CBC, iv=iv)
@@ -122,7 +118,7 @@ def aes_dec(cipher_text, key, iv):  # Function implementing aes-128 decryption i
     # aes_enc and aes_dec are from Thomas Gross Week 3 Work Sheet
 
 
-def integer_validation(message):    # Function to validate if the user has entered an integer
+def integer_validation(message):  # Function to validate if the user has entered an integer
     while True:
         try:
             user_input = int(input(message))
@@ -134,7 +130,7 @@ def integer_validation(message):    # Function to validate if the user has enter
     # How to make sure the user enters a number (integer) - www.101computing.net
 
 
-def dummy_time_stego(host):    # function implementing time based steganography with dummy packets
+def dummy_time_stego(host):  # function implementing time based steganography with dummy packets
     message = "Dummy message"
     enc_message = aes_enc(message, "ffeeddccbbaa99887766554433221100", "00112233445566778899aabbccddeeff")
     stego_time_key = integer_validation("What delay in messages do you want in seconds?")
@@ -163,7 +159,7 @@ def receive_stego_message():
     time.sleep(10)
 
 
-def net_info():     # Function to get network info
+def net_info():  # Function to get network info
     ip = find_user_ip()
     clear_line()
     print("IP address is: ", ip)
@@ -173,7 +169,7 @@ def net_info():     # Function to get network info
 
 def create_user():  # Function for new user creation
     getpass.GetPassWarning()
-    print("This account will only be kept while the program is running.")   # Temporary
+    print("This account will only be kept while the program is running.")  # Temporary
     username = input("Enter a username: ")
     pw = getpass.getpass("Enter your password: ")
     pw2 = getpass.getpass("Enter your password again: ")
@@ -189,7 +185,7 @@ def create_user():  # Function for new user creation
         create_user()
 
 
-def login_menu():   # Function for the login menu
+def login_menu():  # Function for the login menu
     while True:
         print("Welcome to the stego-time chat client login.")
         print("Press 1 to login")
@@ -212,7 +208,7 @@ def login_menu():   # Function for the login menu
             login_menu()
 
 
-def user_menu():    # Function for the user menu
+def user_menu():  # Function for the user menu
     while True:
         clear_line()
         print("Press 1 for Network information")
@@ -277,30 +273,19 @@ def get_random_string(length):
 
 
 def new_console(script):
-    Popen([executable, script], creationflags=CREATE_NEW_CONSOLE)
-    # https://stackoverflow.com/questions/6469655/how-can-i-spawn-new-shells-to-run-python-scripts-from-a-base-python-script
-
-
-def packet_capture():
-    # Capture only TCP packets to port 80, i.e. HTTP requests.
-    w = pydivert.WinDivert("tcp.DstPort == 4001 and tcp.PayloadLength > 0")
-
-    w.open()  # packets will be captured from now on
-
-    packet = w.recv()  # read a single packet
-    print(packet)
-    w.send(packet)  # re-inject the packet into the network stack
-
-    w.close()  # stop capturing packets
-    # https://stackoverflow.com/questions/71888853/capturing-packets-in-python-3
+    if os.name == 'nt':
+        Popen([executable, script], creationflags=CREATE_NEW_CONSOLE)  # Windows
+        # https://stackoverflow.com/questions/6469655/how-can-i-spawn-new-shells-to-run-python-scripts-from-a-base-python-script
+    else:  # Linux
+        subprocess.call(['gnome-terminal', '-e', f'python3 {script}'])
 
 
 # main program here
 def main():
-    new_console('auto-message-receive.py')
-    new_console('auto-message-send.py')
-    init_admin()    # Initialise Admin Credentials for Login (temporary)
-    login_menu()    # Run Login Function
+    new_console('auto-message-recive.py')
+    new_console('auto-message-gen.py')
+    init_admin()  # Initialise Admin Credentials for Login (temporary)
+    login_menu()  # Run Login Function
 
 
 if __name__ == "__main__":
