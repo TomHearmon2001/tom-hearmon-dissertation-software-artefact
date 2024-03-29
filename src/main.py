@@ -1,4 +1,5 @@
 # Imports
+import os
 import getpass
 from scapy.all import *
 from scapy.layers.l2 import Ether, ARP
@@ -64,6 +65,17 @@ def tcp_send(message, host):
     s.close()
 
 
+def tcp_send_forever(message, host):
+    port = 4001  # The port used by the server
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        s.connect((host, port))
+        s.sendall(encode_to_bytes(message))
+    s.close()
+    tcp_send(message, host)
+
+
+
 def tcp_receive(host):
     print(f"Server set up at {host}")
     port = 4001  # Port to listen on (non-privileged ports are > 1023)
@@ -86,6 +98,32 @@ def tcp_receive(host):
                     break
                 if not data:
                     break
+    # https://realpython.com/python-sockets/#background
+
+
+def tcp_receive_forever(host):
+    print(f"Server set up at {host}")
+    port = 4001  # Port to listen on (non-privileged ports are > 1023)
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        s.bind((host, port))
+        s.listen()
+        conn, addr = s.accept()
+        with conn:
+            print(f"Connected by {addr}")
+            while True:
+                data = conn.recv(1024)
+                data = decode_from_bytes(data)
+                data = aes_dec(data, "ffeeddccbbaa99887766554433221100", "00112233445566778899aabbccddeeff")
+                if not stego:
+                    print(data)
+                else:
+                    print(data)
+                    break
+                if not data:
+                    break
+    tcp_receive(host)
     # https://realpython.com/python-sockets/#background
 
 
