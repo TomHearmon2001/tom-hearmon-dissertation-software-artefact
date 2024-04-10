@@ -4,6 +4,7 @@ import getpass
 from scapy.all import *
 from scapy.layers.l2 import Ether, ARP
 from sys import executable
+
 if os.name == 'nt':
     from subprocess import Popen, CREATE_NEW_CONSOLE
 from base64 import b64encode, b64decode
@@ -23,7 +24,7 @@ def clear_line():  # clears the line of the terminal on any OS
 
 
 def sha256_hash(text_to_hash):  # Function to hash text
-    return sha256(encode_to_bytes(text_to_hash)).hexdigest()
+    return sha256(text_to_hash.encode("utf-8")).hexdigest()
 
 
 def init_admin():  # Function to initialise the admin details (temporary)
@@ -61,7 +62,7 @@ def tcp_send(message, host):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.connect((host, port))
-        s.sendall(encode_to_bytes(message))
+        s.sendall(message.encode("utf-8"))
     s.close()
 
 
@@ -70,10 +71,9 @@ def tcp_send_forever(message, host):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.connect((host, port))
-        s.sendall(encode_to_bytes(message))
+        s.sendall(message.encode("utf-8"))
     s.close()
     tcp_send_forever(message, host)
-
 
 
 def tcp_receive(host):
@@ -90,7 +90,7 @@ def tcp_receive(host):
             while True:
                 data = conn.recv(1024)
                 data = decode_from_bytes(data)
-                data = aes_dec(data, "ffeeddccbbaa99887766554433221100", "00112233445566778899aabbccddeeff")
+                data = aes_dec(data, b'hgfedcba87654321', b'00112233445566778899aabbccddeeff')
                 if not stego:
                     print(data)
                 else:
@@ -115,7 +115,7 @@ def tcp_receive_forever(host):
             while True:
                 data = conn.recv(1024)
                 data = decode_from_bytes(data)
-                data = aes_dec(data, "ffeeddccbbaa99887766554433221100", "00112233445566778899aabbccddeeff")
+                data = aes_dec(data, b'hgfedcba87654321', b'00112233445566778899aabbccddeeff')
                 if not stego:
                     print(data)
                 else:
@@ -133,10 +133,6 @@ def data_print(data):
     time.sleep(10)
 
 
-def encode_to_bytes(data):
-    return data.encode("utf-8")
-
-
 def decode_from_bytes(data):
     return data.decode().strip()
 
@@ -145,11 +141,11 @@ def aes_enc(plaintext, iv, key):  # Function implementing aes-128 encryption in 
     iv = bytes.fromhex(iv)
     key = bytes.fromhex(key)
     cipher = AES.new(key=key, mode=AES.MODE_CBC, iv=iv)
-    cipher_text = b64encode(cipher.encrypt(pad(encode_to_bytes(plaintext), AES.block_size))).decode("utf-8")
+    cipher_text = b64encode(cipher.encrypt(pad(plaintext.encode("utf-8")), AES.block_size)).decode("utf-8")
     return cipher_text
 
 
-def aes_dec(cipher_text, key, iv):  # Function implementing aes-128 decryption in Chain Block Cipher Mode
+def aes_dec(cipher_text, iv, key):  # Function implementing aes-128 decryption in Chain Block Cipher Mode
     cipher = AES.new(key=key, mode=AES.MODE_CBC, iv=iv)
     decoded_text = unpad(cipher.decrypt(b64decode(cipher_text)), AES.block_size).decode("utf-8")
     return decoded_text
@@ -170,7 +166,7 @@ def integer_validation(message):  # Function to validate if the user has entered
 
 def dummy_time_stego(host):  # function implementing time based steganography with dummy packets
     message = "Dummy message"
-    enc_message = aes_enc(message, "ffeeddccbbaa99887766554433221100", "00112233445566778899aabbccddeeff")
+    enc_message = aes_enc(message, b'hgfedcba87654321', b'00112233445566778899aabbccddeeff')
     stego_time_key = integer_validation("What delay in messages do you want in seconds?")
     tcp_send(enc_message, host)
     print("Message 1 sent successfully")
@@ -265,7 +261,7 @@ def user_menu():  # Function for the user menu
             clear_line()
             host = input("Destination IP Address ")
             message = input("What is your message? ")
-            enc_message = aes_enc(message, "ffeeddccbbaa99887766554433221100", "00112233445566778899aabbccddeeff")
+            enc_message = aes_enc(message, b'hgfedcba87654321', b'00112233445566778899aabbccddeeff')
             tcp_send(enc_message, host)
         if x == 3:
             clear_line()
