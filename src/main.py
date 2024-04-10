@@ -90,7 +90,7 @@ def tcp_receive(host):
             while True:
                 data = conn.recv(1024)
                 data = decode_from_bytes(data)
-                data = aes_dec(data, "ffeeddccbbaa99887766554433221100", "00112233445566778899aabbccddeeff")
+                data = aes_dec(data, b'ffeeddccbbaa99887766554433221100', b'00112233445566778899aabbccddeeff')
                 if not stego:
                     print(data)
                 else:
@@ -115,7 +115,7 @@ def tcp_receive_forever(host):
             while True:
                 data = conn.recv(1024)
                 data = decode_from_bytes(data)
-                data = aes_dec(data, "ffeeddccbbaa99887766554433221100", "00112233445566778899aabbccddeeff")
+                data = aes_dec(data, b'ffeeddccbbaa99887766554433221100', b'00112233445566778899aabbccddeeff')
                 if not stego:
                     print(data)
                 else:
@@ -170,7 +170,7 @@ def integer_validation(message):  # Function to validate if the user has entered
 
 def dummy_time_stego(host):  # function implementing time based steganography with dummy packets
     message = "Dummy message"
-    enc_message = aes_enc(message, "ffeeddccbbaa99887766554433221100", "00112233445566778899aabbccddeeff")
+    enc_message = aes_enc(message, b'ffeeddccbbaa99887766554433221100', b'00112233445566778899aabbccddeeff')
     stego_time_key = integer_validation("What delay in messages do you want in seconds?")
     tcp_send(enc_message, host)
     print("Message 1 sent successfully")
@@ -265,7 +265,7 @@ def user_menu():  # Function for the user menu
             clear_line()
             host = input("Destination IP Address ")
             message = input("What is your message? ")
-            enc_message = aes_enc(message, "ffeeddccbbaa99887766554433221100", "00112233445566778899aabbccddeeff")
+            enc_message = aes_enc(message, b'ffeeddccbbaa99887766554433221100', b'00112233445566778899aabbccddeeff')
             tcp_send(enc_message, host)
         if x == 3:
             clear_line()
