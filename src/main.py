@@ -67,13 +67,8 @@ def tcp_send(message, host):
 
 
 def tcp_send_forever(message, host):
-    port = 4001  # The port used by the server
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.connect((host, port))
-        s.sendall(message.encode("utf-8"))
-    s.close()
-    tcp_send_forever(message, host)
+    while True:
+        tcp_send(message, host)
 
 
 def tcp_receive(host):
@@ -90,40 +85,18 @@ def tcp_receive(host):
             while True:
                 data = conn.recv(1024)
                 data = decode_from_bytes(data)
-                data = aes_dec(data, b'hgfedcba87654321', b'00112233445566778899aabbccddeeff')
-                if not stego:
-                    print(data)
+                if len(data) == 0:
+                    break
                 else:
+                    data = aes_dec(data, b'hgfedcba87654321', b'00112233445566778899aabbccddeeff')
                     print(data)
-                    break
-                if not data:
-                    break
+                    time.sleep(5)
     # https://realpython.com/python-sockets/#background
 
 
 def tcp_receive_forever(host):
-    print(f"Server set up at {host}")
-    port = 4001  # Port to listen on (non-privileged ports are > 1023)
-
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.bind((host, port))
-        s.listen()
-        conn, addr = s.accept()
-        with conn:
-            print(f"Connected by {addr}")
-            while True:
-                data = conn.recv(1024)
-                data = decode_from_bytes(data)
-                data = aes_dec(data, b'hgfedcba87654321', b'00112233445566778899aabbccddeeff')
-                if not stego:
-                    print(data)
-                else:
-                    print(data)
-                    break
-                if not data:
-                    break
-    tcp_receive_forever(host)
+    while True:
+        tcp_receive(host)
     # https://realpython.com/python-sockets/#background
 
 
@@ -141,13 +114,13 @@ def aes_enc(plaintext, iv, key):  # Function implementing aes-128 encryption in 
     iv = bytes.fromhex(iv)
     key = bytes.fromhex(key)
     cipher = AES.new(key=key, mode=AES.MODE_CBC, iv=iv)
-    cipher_text = b64encode(cipher.encrypt(pad(plaintext.encode("utf-8")), AES.block_size)).decode("utf-8")
+    cipher_text = b64encode(cipher.encrypt(pad(plaintext.encode("utf-8"), AES.block_size)))
     return cipher_text
 
 
 def aes_dec(cipher_text, iv, key):  # Function implementing aes-128 decryption in Chain Block Cipher Mode
     cipher = AES.new(key=key, mode=AES.MODE_CBC, iv=iv)
-    decoded_text = unpad(cipher.decrypt(b64decode(cipher_text)), AES.block_size).decode("utf-8")
+    decoded_text = unpad(cipher.decrypt(b64decode(cipher_text)), AES.block_size)
     return decoded_text
     # aes_enc and aes_dec are from Thomas Gross Week 3 Work Sheet
 
