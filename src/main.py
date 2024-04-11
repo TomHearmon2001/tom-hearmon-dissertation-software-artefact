@@ -1,5 +1,4 @@
 # Imports
-import os
 import getpass
 from scapy.all import *
 from scapy.layers.l2 import Ether, ARP
@@ -102,7 +101,6 @@ def tcp_receive_single(host):
 def tcp_receive_forever(host):
     while True:
         tcp_receive(host)
-    # https://realpython.com/python-sockets/#background
 
 
 def data_print(data):
@@ -153,7 +151,7 @@ def dummy_time_stego(host):  # function implementing time based steganography wi
     user_menu()
 
 
-def receive_stego_message():
+def receive_time_stego_message():
     global stego
     stego = True
     host = find_user_ip()
@@ -166,6 +164,11 @@ def receive_stego_message():
     print("Program will return to main menu in 10 seconds")
     stego = False
     time.sleep(10)
+
+
+def packet_handler(packet):
+    print(packet.summary())
+
 
 
 def net_info():  # Function to get network info
@@ -225,8 +228,9 @@ def user_menu():  # Function for the user menu
         print("Press 3 to receive a message via TCP")
         print("Press 4 to send stego message with dummy packets")
         print("Press 5 to receive stego message")
-        print("Press 6 to Log Out")
-        print("Press 7 to close the program")
+        print("Press 6 to for Packet Information")
+        print("Press 7 to Log Out")
+        print("Press 8 to close the program")
 
         x = int(input())
         if x == 1:
@@ -247,11 +251,13 @@ def user_menu():  # Function for the user menu
             dummy_time_stego(host)
         if x == 5:
             clear_line()
-            receive_stego_message()
+            receive_time_stego_message()
         if x == 6:
+            sniff(prn=packet_handler, count=10)
+        if x == 7:
             clear_line()
             login_menu()
-        if x == 7:
+        if x == 8:
             clear_line()
             exit("User Closed the Program")
         else:
