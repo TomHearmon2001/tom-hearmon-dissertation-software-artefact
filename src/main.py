@@ -58,11 +58,12 @@ def login():  # Login function, allows user to be authenticated to use the progr
 
 
 def tcp_send(message, host):
+    enc_message = aes_enc(message, b'hgfedcba87654321', b'00112233445566778899aabbccddeeff')
     port = 4001  # The port used by the server
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.connect((host, port))
-        s.sendall(message.encode("utf-8"))
+        s.sendall(enc_message.encode("utf-8"))
     s.close()
 
 
@@ -143,12 +144,11 @@ def integer_validation(message):  # Function to validate if the user has entered
 
 def dummy_time_stego(host):  # function implementing time based steganography with dummy packets
     message = "Dummy message"
-    enc_message = aes_enc(message, b'hgfedcba87654321', b'00112233445566778899aabbccddeeff')
     stego_time_key = integer_validation("What delay in messages do you want in seconds?")
-    tcp_send(enc_message, host)
+    tcp_send(message, host)
     print("Message 1 sent successfully")
     time.sleep(int(stego_time_key))
-    tcp_send(enc_message, host)
+    tcp_send(message, host)
     print("Message 2 sent successfully")
     print("Program Complete returning to main menu in 5 seconds")
     time.sleep(5)
@@ -238,8 +238,7 @@ def user_menu():  # Function for the user menu
             clear_line()
             host = input("Destination IP Address ")
             message = input("What is your message? ")
-            enc_message = aes_enc(message, b'hgfedcba87654321', b'00112233445566778899aabbccddeeff')
-            tcp_send(enc_message, host)
+            tcp_send(message, host)
         if x == 3:
             clear_line()
             host = find_user_ip()
