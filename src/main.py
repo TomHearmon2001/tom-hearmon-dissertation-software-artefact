@@ -4,7 +4,6 @@ import getpass
 from scapy.all import *
 from scapy.layers.l2 import Ether, ARP
 from sys import executable
-
 if os.name == 'nt':
     from subprocess import Popen, CREATE_NEW_CONSOLE
 from base64 import b64encode, b64decode
@@ -69,6 +68,7 @@ def tcp_send(message, host):
 
 def tcp_send_forever(message, host):
     while True:
+        time.sleep(1)
         tcp_send(message, host)
 
 
@@ -90,7 +90,7 @@ def tcp_receive(host):
                     break
                 else:
                     data = aes_dec(data, b'hgfedcba87654321', b'00112233445566778899aabbccddeeff')
-                    print(data)
+                    print(decode_from_bytes(data))
     # https://realpython.com/python-sockets/#background
 
 
@@ -116,11 +116,9 @@ def decode_from_bytes(data):
 
 
 def aes_enc(plaintext, iv, key):  # Function implementing aes-128 encryption in Chain Block Cipher Mode
-    iv = bytes.fromhex(iv)
-    key = bytes.fromhex(key)
     cipher = AES.new(key=key, mode=AES.MODE_CBC, iv=iv)
     cipher_text = b64encode(cipher.encrypt(pad(plaintext.encode("utf-8"), AES.block_size)))
-    return cipher_text
+    return decode_from_bytes(cipher_text)
 
 
 def aes_dec(cipher_text, iv, key):  # Function implementing aes-128 decryption in Chain Block Cipher Mode
