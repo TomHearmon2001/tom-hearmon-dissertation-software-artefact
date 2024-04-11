@@ -90,8 +90,12 @@ def tcp_receive(host):
                 else:
                     data = aes_dec(data, b'hgfedcba87654321', b'00112233445566778899aabbccddeeff')
                     print(data)
-                    time.sleep(5)
     # https://realpython.com/python-sockets/#background
+
+
+def tcp_receive_single(host):
+    tcp_receive(host)
+    time.sleep(5)
 
 
 def tcp_receive_forever(host):
@@ -239,7 +243,7 @@ def user_menu():  # Function for the user menu
         if x == 3:
             clear_line()
             host = find_user_ip()
-            tcp_receive(host)
+            tcp_receive_single(host)
         if x == 4:
             clear_line()
             host = input("Destination IP Address ")
