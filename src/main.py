@@ -1,7 +1,7 @@
 # Imports
 import getpass
 from scapy.all import *
-from scapy.layers.l2 import Ether, ARP
+from scapy.layers.inet import IP, TCP
 from sys import executable
 if os.name == 'nt':
     from subprocess import Popen, CREATE_NEW_CONSOLE
@@ -167,8 +167,14 @@ def receive_time_stego_message():
 
 
 def packet_handler(packet):
-    print(packet.summary())
-
+    while True:
+        if IP in packet and TCP in packet:
+            content = packet[TCP].payload
+            if len(content) == 0:
+                break
+            else:
+                print(bytes(content))
+                break
 
 
 def net_info():  # Function to get network info
