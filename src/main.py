@@ -15,6 +15,7 @@ from hashlib import sha256
 # Global Variables
 passwordDict = {}  # Dictionary to Store User Account Information in
 stego = False
+addition = ""
 
 
 # functions
@@ -168,7 +169,8 @@ def receive_time_stego_message():
     time.sleep(10)
 
 
-def packet_handler(packet, addition):
+def packet_handler(packet):
+    global addition
     while True:
         if IP in packet and TCP in packet:
             content = packet[TCP].payload
@@ -179,9 +181,11 @@ def packet_handler(packet, addition):
                 content_string = decode_from_bytes(content)
                 content_string = f"{content_string}{addition}"
                 content = bytes(content_string, "utf-8")
-                packet[TCP].payload = content
-                send(packet)
+                packet[TCP].remove_payload()
+                packet[TCP].set_payload(content)
+                sendp(packet)
                 break
+
 
 def check(x):
     b = set(x)
@@ -196,14 +200,15 @@ def check(x):
 
 
 def secret_stego(bin_in):
+    global addition
     stego_list = []
     check(bin_in)
     bin_list = [int(d) for d in str(bin_in)]
     for i in range(0, len(bin_list)):
-        if bin_list[i] == "0":
+        if bin_list[i] == 0:
             for j in range(0, 4):
                 stego_list.append("-")
-        elif bin_list[i] == "1":
+        elif bin_list[i] == 1:
             for j in range(0, 4):
                 stego_list.append("+")
         else:
@@ -211,7 +216,8 @@ def secret_stego(bin_in):
             time.sleep(2)
             user_menu()
     for j in range(0, len(stego_list)):
-        sniff(prn=packet_handler(packet=__contains__, addition=stego_list[j]))
+        addition = stego_list[j]
+        sniff(prn=packet_handler)
 
 
 def net_info():  # Function to get network info
