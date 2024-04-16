@@ -1,5 +1,7 @@
 # Imports
 import getpass
+import time
+
 from scapy.all import *
 from scapy.layers.inet import IP, TCP
 from sys import executable
@@ -166,15 +168,50 @@ def receive_time_stego_message():
     time.sleep(10)
 
 
-def packet_handler(packet):
+def packet_handler(packet, addition):
     while True:
         if IP in packet and TCP in packet:
             content = packet[TCP].payload
             if len(content) == 0:
                 break
             else:
-                print(bytes(content))
+                content = bytes(content)
+                content_string = decode_from_bytes(content)
+                content_string = f"{content_string}{addition}"
+                content = bytes(content_string, "utf-8")
+                packet[TCP].payload = content
+                send(packet)
                 break
+
+def check(x):
+    b = set(x)
+    s = {'0', '1'}
+    if s == b or b == {'0'} or b == {'1'}:
+        return
+    else:
+        print("Invalid Input! Returning to User Menu")
+        time.sleep(2)
+        user_menu()
+# https://www.studytonight.com/python-programs/python-program-to-check-if-a-given-string-is-a-binary-string-or-not
+
+
+def secret_stego(bin_in):
+    stego_list = []
+    check(bin_in)
+    bin_list = [int(d) for d in str(bin_in)]
+    for i in range(0, len(bin_list)):
+        if bin_list[i] == "0":
+            for j in range(0, 4):
+                stego_list.append("-")
+        elif bin_list[i] == "1":
+            for j in range(0, 4):
+                stego_list.append("+")
+        else:
+            print("Error in input Array")
+            time.sleep(2)
+            user_menu()
+    for j in range(0, len(stego_list)):
+        sniff(prn=packet_handler(packet=__contains__, addition=stego_list[j]))
 
 
 def net_info():  # Function to get network info
@@ -259,7 +296,9 @@ def user_menu():  # Function for the user menu
             clear_line()
             receive_time_stego_message()
         if x == 6:
-            sniff(prn=packet_handler, count=10)
+            clear_line()
+            bin_in = str(input("Enter the binary message you want to send:"))
+            secret_stego(bin_in)
         if x == 7:
             clear_line()
             login_menu()
