@@ -73,7 +73,7 @@ def tcp_send_forever(message, host):
 
 
 def tcp_receive(host):
-    print(f"Server set up at {host}")
+    print("Server set up at {0}".format(host))
     port = 4001  # Port to listen on (non-privileged ports are > 1023)
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -82,7 +82,7 @@ def tcp_receive(host):
         s.listen()
         conn, addr = s.accept()
         with conn:
-            print(f"Connected by {addr}")
+            print("Connected by {0}".format(addr))
             while True:
                 data = conn.recv(1024)
                 data = decode_from_bytes(data)
@@ -161,8 +161,8 @@ def receive_stego_message():
     tcp_receive(host)
     time1 = time.perf_counter()
     tcp_receive(host)
-    time2 = time.perf_counter()
-    print(f"The stego message received was {time2 - time1:0.4f}")
+    time2 = time.perf_counter()  
+#  print(f"The stego message received was {time2 - time1:0.4f}")
     print("Program will return to main menu in 10 seconds")
     stego = False
     time.sleep(10)
@@ -285,7 +285,8 @@ def new_console(script):
         Popen([executable, script], creationflags=CREATE_NEW_CONSOLE)  # Windows
         # https://stackoverflow.com/questions/6469655/how-can-i-spawn-new-shells-to-run-python-scripts-from-a-base-python-script
     else:  # Linux
-        subprocess.call(['gnome-terminal', '-e', f'python3 {script}'])
+        # subprocess.call(['lxterminal', '-e', 'python3 {0}'.format(script)])
+	os.system('python3 {0}'.format(script))
 
 
 # main program here
