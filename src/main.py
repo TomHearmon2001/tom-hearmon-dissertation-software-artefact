@@ -286,7 +286,7 @@ def new_console(script):
         # https://stackoverflow.com/questions/6469655/how-can-i-spawn-new-shells-to-run-python-scripts-from-a-base-python-script
     else:  # Linux
         # subprocess.call(['lxterminal', '-e', 'python3 {0}'.format(script)])
-	os.system('python3 {0}'.format(script))
+        os.system('python3 {0}'.format(script))
 
 
 # main program here
