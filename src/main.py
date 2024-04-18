@@ -68,12 +68,6 @@ def tcp_send(message, host):
     s.close()
 
 
-def tcp_send_forever(message, host):
-    while True:
-        time.sleep(1)
-        tcp_send(message, host)
-
-
 def tcp_receive(host):
     print(f"Server set up at {host}")
     port = 4001  # Port to listen on (non-privileged ports are > 1023)
