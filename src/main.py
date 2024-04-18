@@ -90,16 +90,6 @@ def tcp_receive(host):
     # https://realpython.com/python-sockets/#background
 
 
-def tcp_receive_single(host):
-    tcp_receive(host)
-    time.sleep(5)
-
-
-def tcp_receive_forever(host):
-    while True:
-        tcp_receive(host)
-
-
 def data_print(data):
     print(decode_from_bytes(data))
     print("Message received Returning to menu in 10 seconds")
@@ -287,7 +277,7 @@ def user_menu():  # Function for the user menu
         if x == 3:
             clear_line()
             host = find_user_ip()
-            tcp_receive_single(host)
+            tcp_receive(host)
         if x == 4:
             clear_line()
             host = input("Destination IP Address ")
