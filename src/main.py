@@ -285,8 +285,7 @@ def new_console(script):
         Popen([executable, script], creationflags=CREATE_NEW_CONSOLE)  # Windows
         # https://stackoverflow.com/questions/6469655/how-can-i-spawn-new-shells-to-run-python-scripts-from-a-base-python-script
     else:  # Linux
-        # subprocess.call(['lxterminal', '-e', 'python3 {0}'.format(script)])
-        os.system('python3 {0}'.format(script))
+        subprocess.call(['lxterminal', '-e', 'python3' '{0}'.format(script)])
 
 
 # main program here
@@ -294,6 +293,26 @@ def main():
     new_console('auto-message-receive.py')
     init_admin()  # Initialise Admin Credentials for Login (temporary)
     new_console('auto-message-gen.py')
+    print((r"""
+    
+                             .       .
+                        / `.   .' \
+                .---.  <    > <    >  .---.
+                |    \  \ - ~ ~ - /  /    |
+                 ~-..-~             ~-..-~
+             \~~~\.'                    `./~~~/
+              \__/                        \__/
+               /                  .-    .  \
+        _._ _.-    .-~ ~-.       /       }   \/~~~/
+    _.-'q  }~     /       }     {        ;    \__/
+   {'__,  /      (       /      {       /      `. ,~~|   .     .
+    `''''='~~-.__(      /_      |      /- _      `..-'   \\   //
+                / \   =/  ~~--~~{    ./|    ~-.     `-..__\\_//_.-'
+               {   \  +\         \  =\ (        ~ - . _ _ _..---~
+               |  | {   }         \   \_\
+              '---.o___,'       .o___,'
+    
+    """))
     login_menu()  # Run Login Function
 
 
