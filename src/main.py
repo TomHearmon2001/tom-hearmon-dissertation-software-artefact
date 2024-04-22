@@ -326,7 +326,7 @@ def new_console(script):
         Popen([executable, script], creationflags=CREATE_NEW_CONSOLE)  # Windows
         # https://stackoverflow.com/questions/6469655/how-can-i-spawn-new-shells-to-run-python-scripts-from-a-base-python-script
     else:  # Linux
-        subprocess.call(['lxterminal', '-e', 'python3', '{0}'.format(script)])
+        subprocess.call(['gnome-terminal', '-e', 'python3 {0}'.format(script)])
 
 
 # main program here
