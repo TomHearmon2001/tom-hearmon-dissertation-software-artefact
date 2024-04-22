@@ -1,8 +1,9 @@
 # Imports
-import os
 import getpass
+import time
+
 from scapy.all import *
-from scapy.layers.l2 import Ether, ARP
+from scapy.layers.inet import IP, TCP
 from sys import executable
 if os.name == 'nt':
     from subprocess import Popen, CREATE_NEW_CONSOLE
@@ -14,6 +15,7 @@ from hashlib import sha256
 # Global Variables
 passwordDict = {}  # Dictionary to Store User Account Information in
 stego = False
+addition = ""
 
 
 # functions
@@ -66,12 +68,6 @@ def tcp_send(message, host):
     s.close()
 
 
-def tcp_send_forever(message, host):
-    while True:
-        time.sleep(1)
-        tcp_send(message, host)
-
-
 def tcp_receive(host):
     print("Server set up at {0}".format(host))
     port = 4001  # Port to listen on (non-privileged ports are > 1023)
@@ -91,17 +87,6 @@ def tcp_receive(host):
                 else:
                     data = aes_dec(data, b'hgfedcba87654321', b'00112233445566778899aabbccddeeff')
                     print(decode_from_bytes(data))
-    # https://realpython.com/python-sockets/#background
-
-
-def tcp_receive_single(host):
-    tcp_receive(host)
-    time.sleep(5)
-
-
-def tcp_receive_forever(host):
-    while True:
-        tcp_receive(host)
     # https://realpython.com/python-sockets/#background
 
 
@@ -153,7 +138,7 @@ def dummy_time_stego(host):  # function implementing time based steganography wi
     user_menu()
 
 
-def receive_stego_message():
+def receive_time_stego_message():
     global stego
     stego = True
     host = find_user_ip()
@@ -166,6 +151,57 @@ def receive_stego_message():
     print("Program will return to main menu in 10 seconds")
     stego = False
     time.sleep(10)
+
+
+def packet_handler(packet):
+    global addition
+    while True:
+        if IP in packet and TCP in packet:
+            content = packet[TCP].payload
+            if len(content) == 0:
+                break
+            else:
+                content = bytes(content)
+                content_string = decode_from_bytes(content)
+                content_string = f"{content_string}{addition}"
+                content = bytes(content_string, "utf-8")
+                packet[TCP].remove_payload()
+                packet[TCP].set_payload(content)
+                sendp(packet)
+                break
+
+
+def check(x):
+    b = set(x)
+    s = {'0', '1'}
+    if s == b or b == {'0'} or b == {'1'}:
+        return
+    else:
+        print("Invalid Input! Returning to User Menu")
+        time.sleep(2)
+        user_menu()
+# https://www.studytonight.com/python-programs/python-program-to-check-if-a-given-string-is-a-binary-string-or-not
+
+
+def secret_stego(bin_in):
+    global addition
+    stego_list = []
+    check(bin_in)
+    bin_list = [int(d) for d in str(bin_in)]
+    for i in range(0, len(bin_list)):
+        if bin_list[i] == 0:
+            for j in range(0, 4):
+                stego_list.append("-")
+        elif bin_list[i] == 1:
+            for j in range(0, 4):
+                stego_list.append("+")
+        else:
+            print("Error in input Array")
+            time.sleep(2)
+            user_menu()
+    for j in range(0, len(stego_list)):
+        addition = stego_list[j]
+        sniff(prn=packet_handler)
 
 
 def net_info():  # Function to get network info
@@ -225,8 +261,9 @@ def user_menu():  # Function for the user menu
         print("Press 3 to receive a message via TCP")
         print("Press 4 to send stego message with dummy packets")
         print("Press 5 to receive stego message")
-        print("Press 6 to Log Out")
-        print("Press 7 to close the program")
+        print("Press 6 to for Packet Information")
+        print("Press 7 to Log Out")
+        print("Press 8 to close the program")
 
         x = int(input())
         if x == 1:
@@ -240,18 +277,22 @@ def user_menu():  # Function for the user menu
         if x == 3:
             clear_line()
             host = find_user_ip()
-            tcp_receive_single(host)
+            tcp_receive(host)
         if x == 4:
             clear_line()
             host = input("Destination IP Address ")
             dummy_time_stego(host)
         if x == 5:
             clear_line()
-            receive_stego_message()
+            receive_time_stego_message()
         if x == 6:
             clear_line()
-            login_menu()
+            bin_in = str(input("Enter the binary message you want to send:"))
+            secret_stego(bin_in)
         if x == 7:
+            clear_line()
+            login_menu()
+        if x == 8:
             clear_line()
             exit("User Closed the Program")
         else:
