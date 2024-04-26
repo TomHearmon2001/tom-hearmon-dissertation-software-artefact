@@ -224,6 +224,7 @@ def stego_receive(payload):
         num_non_stego += 1
         if num_non_stego > 5:
             print(stego_message)
+            num_non_stego = 0
         return
 
 
