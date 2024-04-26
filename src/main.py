@@ -16,6 +16,7 @@ from hashlib import sha256
 passwordDict = {}  # Dictionary to Store User Account Information in
 stego = False
 addition = ""
+num_non_stego = 0
 
 
 # functions
@@ -85,6 +86,7 @@ def tcp_receive(host):
                 if len(data) == 0:
                     break
                 else:
+                    stego_receive(data)
                     data = aes_dec(data, b'hgfedcba87654321', b'00112233445566778899aabbccddeeff')
                     print(decode_from_bytes(data))
     # https://realpython.com/python-sockets/#background
@@ -202,6 +204,27 @@ def secret_stego(bin_in):
     for j in range(0, len(stego_list)):
         addition = stego_list[j]
         sniff(prn=packet_handler)
+
+
+def stego_receive(payload):
+    global num_non_stego
+    N = 1
+    last_char = ''
+    stego_message = []
+    while N > 0:
+        last_char = payload[-N]
+        N = N - 1
+    if last_char == '+' or last_char == '-':
+        num_non_stego = 0
+        if last_char == '+':
+            stego_message.append("1")
+        elif last_char == '-':
+            stego_message.append("0")
+    else:
+        num_non_stego += 1
+        if num_non_stego > 5:
+            print(stego_message)
+        return
 
 
 def net_info():  # Function to get network info
