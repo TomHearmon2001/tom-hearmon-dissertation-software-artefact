@@ -27,7 +27,7 @@ while True:
         packet_loss_chance = round(packet_loss_chance, 1)
         message = get_random_string(random.randint(5, 10))
         if packet_loss_chance == packet_loss_rate:
-            break
+            print("packet lost!")
         elif delay_chance == delay_likelyhood:
             time.sleep(delay)
             tcp_send(message, destination)
