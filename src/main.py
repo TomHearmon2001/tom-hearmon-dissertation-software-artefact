@@ -361,6 +361,7 @@ def print_stego_dino():
                            '---.o___,'       .o___,'
 
                  """))
+    print("Credit: https://ascii.co.uk/art/dinos")
 
 
 # main program here
