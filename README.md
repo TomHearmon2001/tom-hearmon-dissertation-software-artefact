@@ -1,4 +1,4 @@
-# Time based stegochannels artifact
+# Dissertation software Artefact
 Artifact Related to Thomas Hearmon's 2024 Newcastle University Dissertation
 
 ## Requirements
@@ -33,3 +33,10 @@ Then run the following command:
 $ python3 main.py
 ```
 The program will now run in that terminal window.
+
+You can either create your own login credentials or use the predefined admin credentials. Which are:
+
+```
+Username: ADMIN
+Password: ADMIN
+```
