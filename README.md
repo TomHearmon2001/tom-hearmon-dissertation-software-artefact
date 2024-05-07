@@ -1,4 +1,4 @@
-# Dissertation software Artefact
+# Dissertation Software Artefact
 Artifact Related to Thomas Hearmon's 2024 Newcastle University Dissertation
 
 ## Requirements
