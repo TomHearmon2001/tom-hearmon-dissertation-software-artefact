@@ -5,7 +5,7 @@ Artifact Related to Thomas Hearmon's 2024 Newcastle University Dissertation
 All required libraries can be found in the requirements.txt file.
 
 ## Running the Program
-Please note this program only works on Lunix Operating Systems
+Please note this program only works on Linux Operating Systems
 ### Linux
 Open the terminal and navigate to the src folder
 
